@@ -3,7 +3,7 @@ module "elb" {
     version = "4.0.2"
 
     name = "${var.stack}-elb"
-    subnets = [module.vpc.public_subnets]    
+    subnets = module.vpc.public_subnets
     health_check = {
         target              = "HTTP:80/"
         interval            = 30
@@ -13,22 +13,24 @@ module "elb" {
     }
     listener = [
         {
-            instance_port     = "80"
+            instance_port     = "443"
             instance_protocol = "HTTPS"
-            lb_port           = "80"
+            lb_port           = "443"
             lb_protocol       = "HTTPS"
+            ssl_certificate_id  = aws_acm_certificate.cert.id
         },
         {
-        instance_port     = "9090"
-        instance_protocol = "HTTP"
-        lb_port           = "9090"
-        lb_protocol       = "HTTP"
+            instance_port     = "9090"
+            instance_protocol = "HTTPS"
+            lb_port           = "9090"
+            lb_protocol       = "HTTPS"
+            ssl_certificate_id  = aws_acm_certificate.cert.id
         },
     ]
     security_groups = [module.public_subnet_sg.security_group_id]
 
     # ELB attachments
     number_of_instances = 1
-    instances           = [module.ec2.id]
+    instances           = module.ec2.id
 
 }

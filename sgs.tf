@@ -30,7 +30,7 @@ module "public_subnet_sg" {
       cidr_blocks = "0.0.0.0/0"
     },
   ]
-  
+
   #allow all outbound https traffic to internet
   egress_with_cidr_blocks = [
     {
@@ -41,6 +41,7 @@ module "public_subnet_sg" {
       cidr_blocks = "0.0.0.0/0"
     },
   ]
+  
 }
 
 module "private_subnet_sg" {
@@ -75,42 +76,32 @@ module "private_subnet_sg" {
       source_security_group_id = module.public_subnet_sg.security_group_id
     },
   ]
-
-  #Restrict outbound traffic, allow only responses to inbound traffic
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-  ]
 }
 
 # Create an outbound rule on public subnet security group to allow ssh, http and https traffic flowing to private subnet
 resource "aws_security_group_rule" "allow_ssh_from_public_subnet" {
   type                      = "egress"
-  security_group_id         = module.private_subnet_sg.security_group_id
+  security_group_id         = module.public_subnet_sg.security_group_id
   from_port                 = "22"
   to_port                   = "22"
   protocol                  = "tcp"
-  cidr_blocks               = [module.vpc.public_subnets_cidr_blocks]
+  cidr_blocks               = module.vpc.private_subnets_cidr_blocks
 }
 
 resource "aws_security_group_rule" "allow_http_from_public_subnet" {
   type                      = "egress"
-  security_group_id         = module.private_subnet_sg.security_group_id
+  security_group_id         = module.public_subnet_sg.security_group_id
   from_port                 = "80"
   to_port                   = "9090"
   protocol                  = "tcp"
-  cidr_blocks               = [module.vpc.public_subnets_cidr_blocks]
+  cidr_blocks               = module.vpc.private_subnets_cidr_blocks
 }
 
 resource "aws_security_group_rule" "allow_https_from_public_subnet" {
   type                      = "egress"
-  security_group_id         = module.private_subnet_sg.security_group_id
+  security_group_id         = module.public_subnet_sg.security_group_id
   from_port                 = "443"
   to_port                   = "443"
   protocol                  = "tcp"
-  cidr_blocks               = [module.vpc.public_subnets_cidr_blocks]
+  cidr_blocks               = module.vpc.private_subnets_cidr_blocks
 }
