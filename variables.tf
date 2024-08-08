@@ -39,3 +39,9 @@ variable "myip" {
   type        = string
   default     = "136.27.40.26/32"
 }
+
+variable "domain" {
+  description = "Domain"
+  type        = string
+  default     = "sandbox2242.opentlc.com"
+}
