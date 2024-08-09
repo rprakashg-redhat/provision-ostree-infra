@@ -76,6 +76,17 @@ module "private_subnet_sg" {
       source_security_group_id = module.public_subnet_sg.security_group_id
     },
   ]
+
+  #allow all outbound https traffic to internet
+  egress_with_cidr_blocks = [
+    {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+      description = "HTTPS Traffic to any IP"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
 }
 
 # Create an outbound rule on public subnet security group to allow ssh, http and https traffic flowing to private subnet

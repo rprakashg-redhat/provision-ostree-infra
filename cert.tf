@@ -19,7 +19,7 @@ resource "acme_registration" "registration" {
 resource "acme_certificate" "acme" {
     account_key_pem           = acme_registration.registration.account_key_pem
     common_name               = data.aws_route53_zone.base_domain.name
-    subject_alternative_names = ["*.${data.aws_route53_zone.base_domain.name}"]
+    subject_alternative_names = ["imagebuilder.${data.aws_route53_zone.base_domain.name}"]
 
     dns_challenge {
         provider = "route53"
