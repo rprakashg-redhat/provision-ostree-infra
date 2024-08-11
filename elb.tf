@@ -5,7 +5,7 @@ module "elb" {
     name = "${var.stack}-elb"
     subnets = module.vpc.public_subnets
     health_check = {
-        target              = "HTTP:80/"
+        target              = "HTTP:80/index.html"
         interval            = 30
         healthy_threshold   = 2
         unhealthy_threshold = 2
