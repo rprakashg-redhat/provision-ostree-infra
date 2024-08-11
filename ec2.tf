@@ -31,5 +31,8 @@ module "ec2" {
   ]
 
   tags = local.tags
-  
+
+  user_data = <<-EOF
+    echo "<html><body><h1>EC2 Instance Health Check</h1></body></html>" > /var/www/html/index.html
+  EOF 
 }
