@@ -5,7 +5,7 @@ module "elb" {
     name = "${var.stack}-elb"
     subnets = module.vpc.public_subnets
     health_check = {
-        target              = "HTTP:80/index.html"
+        target              = "TCP:80"
         interval            = 30
         healthy_threshold   = 2
         unhealthy_threshold = 2
@@ -14,13 +14,6 @@ module "elb" {
     listener = [
         {
             instance_port     = "443"
-            instance_protocol = "HTTPS"
-            lb_port           = "443"
-            lb_protocol       = "HTTPS"
-            ssl_certificate_id  = aws_acm_certificate.cert.id
-        },
-        {
-            instance_port     = "9090"
             instance_protocol = "HTTPS"
             lb_port           = "9090"
             lb_protocol       = "HTTPS"
