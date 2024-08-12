@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo dnf -y install ansible-core
 sudo dnf -y install git-all
 sudo dnf -y install podman
 
