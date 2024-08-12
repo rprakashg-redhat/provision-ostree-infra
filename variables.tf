@@ -45,3 +45,15 @@ variable "domain" {
   type        = string
   default     = "sandbox2242.opentlc.com"
 }
+
+variable "admin_user" {
+  description = "Default password for ec2-user account"
+  type = string
+  default = "admin"
+}
+
+variable "admin_password" {
+  description = "Default password for ec2-user account"
+  type = string
+  default = "R3dh4t1!"
+}

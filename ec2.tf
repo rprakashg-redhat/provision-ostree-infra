@@ -32,7 +32,21 @@ module "ec2" {
 
   tags = local.tags
 
-  #user_data = <<-EOF
-  #  echo "<html><body><h1>EC2 Instance Health Check</h1></body></html>" > /var/www/html/index.html
-  #EOF 
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo yum -y update
+    sudo useradd -m ${var.admin_user}
+    sudo usermod -aG wheel ${var.admin_user}
+    sudo sed -i -e 's/^# %wheel/%wheel/' -e 's/^%wheel/# %wheel/' /etc/sudoers
+    sudo sed -i -e 's/^%wheel/# %wheel/' -e 's/^# %wheel/%wheel/' /etc/sudoers
+    sudo -u ${var.admin_user} mkdir -p /home/${var.admin_user}/.ssh
+    sudo -u ${var.admin_user} bash -c "echo '${aws_key_pair.sshkeypair.public_key}' > /home/${var.admin_user}/.ssh/authorized_keys"
+    sudo -u ${var.admin_user} ssh-keygen -t rsa -f /home/admin/.ssh/id_rsa -N ""
+    sudo -u ${var.admin_user} cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+    sudo -u ${var.admin_user} chmod 700 /home/${var.admin_user}/.ssh
+    sudo -u ${var.admin_user} chmod 600 /home/${var.admin_user}/.ssh/authorized_keys
+    sudo usermod --password $(echo ${var.admin_password} | openssl passwd -1 -stdin) ${var.admin_user}
+    sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+    sudo systemctl restart sshd
+  EOF 
 }
