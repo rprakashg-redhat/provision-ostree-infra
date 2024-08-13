@@ -1,7 +1,7 @@
 # Create an A record in the specified hosted zone
 resource "aws_route53_record" "elbrecord" {
   zone_id = data.aws_route53_zone.base_domain.id
-  name    = "imagebuilder.${var.domain}"
+  name    = "cockpit.${var.domain}"
   type    = "A"
   
   # Use alias to point to the ELB
