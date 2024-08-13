@@ -35,6 +35,7 @@ module "ec2" {
   user_data = <<-EOF
     #!/bin/bash
     sudo yum -y update
+    sudo dnf -y install rhel-system-roles ansible-core
     sudo useradd -m ${var.admin_user}
     sudo usermod -aG wheel ${var.admin_user}
     sudo sed -i -e 's/^# %wheel/%wheel/' -e 's/^%wheel/# %wheel/' /etc/sudoers
