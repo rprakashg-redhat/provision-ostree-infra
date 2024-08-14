@@ -44,5 +44,5 @@ resource local_file "cert_file" {
 
 resource "local_file" "cert_key_file" {
   filename = "${path.module}/certs/cockpitcert_private_key.pem"
-  content = "${acme_certificate.acme.private_key_pem}"
+  content = acme_certificate.acme.private_key_pem
 }
