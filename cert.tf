@@ -39,10 +39,10 @@ resource "aws_acm_certificate" "cert" {
 
 resource local_file "cert_file" {
   filename = "${path.module}/certs/cockpitcert.pem"
-  content = acme_certificate.acme.certificate_pem
+  content = "${acme_certificate.acme.certificate_pem}\n${acme_certificate.acme.issuer_pem}"
 }
 
 resource "local_file" "cert_key_file" {
   filename = "${path.module}/certs/cockpitcert_private_key.pem"
-  content = "${acme_certificate.acme.private_key_pem}\n${acme_certificate.acme.issuer_pem}"
+  content = "${acme_certificate.acme.private_key_pem}"
 }
