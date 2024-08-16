@@ -43,7 +43,7 @@ variable "myip" {
 variable "domain" {
   description = "Domain"
   type        = string
-  default     = "sandbox2242.opentlc.com"
+  default     = "sandbox1364.opentlc.com"
 }
 
 variable "admin_user" {
