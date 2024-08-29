@@ -1,4 +1,2 @@
 #!/bin/bash
-sudo dnf -y install rhel-system-roles ansible-core
-sudo dnf -y install git-all
-sudo dnf -y install podman
+sudo dnf -y install rhel-system-roles ansible-core git-all podman yum-utils
