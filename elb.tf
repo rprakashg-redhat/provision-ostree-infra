@@ -4,6 +4,8 @@ module "elb" {
 
     name = "${var.stack}-elb"
     subnets = module.vpc.public_subnets
+    security_groups = [module.public_subnet_sg.security_group_id]
+    
     access_logs = {
         bucket = module.elblogs.s3_bucket_id
     }
@@ -29,7 +31,7 @@ module "elb" {
             lb_protocol       = "HTTP"
         },
     ]
-    security_groups = [module.public_subnet_sg.security_group_id]
+    
     # ELB attachments
     number_of_instances = 1
     instances           = module.ec2.id
