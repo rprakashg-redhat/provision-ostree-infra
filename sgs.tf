@@ -63,7 +63,7 @@ module "private_subnet_sg" {
     },
     {
       from_port             = 443
-      to_port               = 9090
+      to_port               = 443
       protocol              = "tcp"
       description           = "HTTPS Traffic from public subnet"
       source_security_group_id = module.public_subnet_sg.security_group_id
@@ -112,7 +112,7 @@ resource "aws_security_group_rule" "allow_https_from_public_subnet" {
   type                      = "egress"
   security_group_id         = module.public_subnet_sg.security_group_id
   from_port                 = "443"
-  to_port                   = "9090"
+  to_port                   = "443"
   protocol                  = "tcp"
   cidr_blocks               = module.vpc.private_subnets_cidr_blocks
 }
