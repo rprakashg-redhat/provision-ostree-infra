@@ -23,8 +23,8 @@ module "public_subnet_sg" {
       cidr_blocks = "0.0.0.0/0"
     },
     {
-      from_port = 443
-      to_port   = 443
+      from_port = 9090
+      to_port   = 9090
       protocol  = "tcp"
       description = "HTTPS Traffic from any source"
       cidr_blocks = "0.0.0.0/0"
