@@ -57,3 +57,15 @@ variable "admin_password" {
   type = string
   default = "R3dh4t1!"
 }
+
+variable "image_registry" {
+  description = "Image registry name for ostree images"
+  type = string
+  default = "ostree-image-registry"
+}
+
+variable "iso_storage_bucket" {
+  description = "Storage bucket for downloadable ISO installers"
+  type        = string
+  default     = "rhdeimages"  
+}
