@@ -13,6 +13,8 @@ module "ec2" {
   associate_public_ip_address   = true
   ipv6_addresses = null
   private_ips = ["10.0.3.141"]
+  
+  iam_instance_profile = aws_iam_instance_profile.imagebuilder_instance_profile.name
 
   root_block_device = [
     {
@@ -50,4 +52,53 @@ module "ec2" {
     sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
     sudo systemctl restart sshd
   EOF 
+}
+
+# Create an IAM Role for EC2 to access S3
+resource "aws_iam_role" "imagebuilder_access_role" {
+  name = "imagebuilder_access_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+# Attach S3 access policy to the IAM Role
+resource "aws_iam_policy" "imagebuilder_access_policy" {
+  name        = "S3AccessPolicy"
+  description = "Policy for EC2 to access S3 bucket ${var.bucket_name}"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "s3:*"
+        Resource = [
+          "arn:aws:s3:::${var.bucket_name}",
+          "arn:aws:s3:::${var.bucket_name}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# Attach the IAM policy to the IAM Role
+resource "aws_iam_role_policy_attachment" "imagebuilder_access_policy_attachment" {
+  role       = aws_iam_role.imagebuilder_access_role.name
+  policy_arn = aws_iam_policy.imagebuilder_access_policy.arn
+}
+
+# Create an IAM instance profile for the EC2 instance
+resource "aws_iam_instance_profile" "imagebuilder_instance_profile" {
+  name = "imagebuilder_instance_profile"
+  role = aws_iam_role.imagebuilder_access_role.name
 }
