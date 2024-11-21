@@ -1,7 +1,7 @@
 variable "region" {
   description = "AWS region"
   type        = string
-  default     = "us-west-2"
+  default     = "us-east-1"
 }
 
 variable "stack" {
@@ -43,7 +43,7 @@ variable "myip" {
 variable "domain" {
   description = "Domain"
   type        = string
-  default     = "sandbox1734.opentlc.com"
+  default     = "sandbox2873.opentlc.com"
 }
 
 variable "admin_user" {
@@ -58,8 +58,26 @@ variable "admin_password" {
   default = "R3dh4t1!"
 }
 
-variable "bucket_name" {
+variable "iso_bucket_name" {
   description = "S3 Storage bucket for ostree content downloadable ISO installers"
   type        = string
-  default     = "deviceedge-repos"  
+  default     = "edge-isos"  
+}
+
+variable "ami_bucket_name" {
+  description = "S3 bucket to store edge ami images"
+  type        = string
+  default     = "edge-amis"
+}
+
+variable "ostree_bucket_name" {
+  description = "S3 bucket hosting ostree content"
+  type = string
+  default = "rhel4edge"
+}
+
+variable "subdomain" {
+  description = "ostree subdomain"
+  type = string
+  default = "ostree"
 }
